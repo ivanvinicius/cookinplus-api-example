@@ -1,5 +1,5 @@
 import { Router } from 'express'
-// import { checkAuthMiddleware } from '../utils/checkAuthMiddleware'
+import { checkAuthMiddleware } from '../utils/checkAuthMiddleware'
 import { NutritionistsRepository } from '../useCases/nutritionists/NutritionistsRepository'
 
 const nutritionistsRoutes = Router()
@@ -7,7 +7,7 @@ const nutritionistsRepository = NutritionistsRepository.getInstance()
 
 nutritionistsRoutes.get(
   '/nutritionists',
-
+  checkAuthMiddleware,
   (request, response) => {
     const { page = 1, per_page = 10 } = request.query
 
@@ -24,28 +24,32 @@ nutritionistsRoutes.get(
   },
 )
 
-nutritionistsRoutes.post('/nutritionists', (request, response) => {
-  const { img_path, user_id } = request.body
+nutritionistsRoutes.post(
+  '/nutritionists',
+  checkAuthMiddleware,
+  (request, response) => {
+    const { img_path, user_id } = request.body
 
-  const nutritionistAlreadyExists =
-    nutritionistsRepository.findByUserId(user_id)
+    const nutritionistAlreadyExists =
+      nutritionistsRepository.findByUserId(user_id)
 
-  if (nutritionistAlreadyExists) {
-    return response.status(400).json({
-      error: true,
-      code: 'nutritionist.exists',
-      message: 'Nutricionista já foi cadastrado(a).',
-    })
-  }
+    if (nutritionistAlreadyExists) {
+      return response.status(400).json({
+        error: true,
+        code: 'nutritionist.exists',
+        message: 'Nutricionista já foi cadastrado(a).',
+      })
+    }
 
-  nutritionistsRepository.create({ img_path, user_id })
+    nutritionistsRepository.create({ img_path, user_id })
 
-  return response.status(201).send()
-})
+    return response.status(201).send()
+  },
+)
 
 nutritionistsRoutes.delete(
   '/sections/:id',
-
+  checkAuthMiddleware,
   (request, response) => {
     const { id } = request.params
 
