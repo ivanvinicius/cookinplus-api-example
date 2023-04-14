@@ -9,17 +9,19 @@ interface ICreateDTO {
   name: string
 }
 
+const data: Section[] = [
+  { id: 'df327cf7-0a41-4c36-be6b-cd8245d5f56a', name: 'Cobertura' },
+  { id: '5fc56cdf-73f3-40c4-86ad-92af5da53f7b', name: 'Massa' },
+  { id: '5ec56cdf-73f3-40c4-86ad-92af5da53f7c', name: 'Recheio' },
+]
+
 class SectionsRepository {
   private sections: Section[]
 
   private static INSTANCE: SectionsRepository
 
   private constructor() {
-    this.sections = [
-      { id: 'df327cf7-0a41-4c36-be6b-cd8245d5f56a', name: 'Cobertura' },
-      { id: '5fc56cdf-73f3-40c4-86ad-92af5da53f7b', name: 'Massa' },
-      { id: '5ec56cdf-73f3-40c4-86ad-92af5da53f7c', name: 'Recheio' },
-    ]
+    this.sections = data
   }
 
   public static getInstance(): SectionsRepository {
