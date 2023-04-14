@@ -1,7 +1,11 @@
 import { Router } from 'express'
+import multer from 'multer'
+
+import uploadConfig from '../config/upload'
 import { checkAuthMiddleware } from '../utils/checkAuthMiddleware'
 import { NutritionistsRepository } from '../useCases/nutritionists/NutritionistsRepository'
 
+const upload = multer(uploadConfig)
 const nutritionistsRoutes = Router()
 const nutritionistsRepository = NutritionistsRepository.getInstance()
 
@@ -27,8 +31,10 @@ nutritionistsRoutes.get(
 nutritionistsRoutes.post(
   '/nutritionists',
   checkAuthMiddleware,
+  upload.single('file'),
   (request, response) => {
-    const { img_path, user_id } = request.body
+    const { user_id } = request.body
+    const { path } = request.file
 
     const nutritionistAlreadyExists =
       nutritionistsRepository.findByUserId(user_id)
@@ -41,7 +47,7 @@ nutritionistsRoutes.post(
       })
     }
 
-    nutritionistsRepository.create({ img_path, user_id })
+    nutritionistsRepository.create({ img_path: path, user_id })
 
     return response.status(201).send()
   },

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import decode from 'jwt-decode'
 
-import { DecodedToken } from '../types'
+import { DecodedToken } from '../@types/types'
 
 export function addUserInformationToRequest(
   request: Request,

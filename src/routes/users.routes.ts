@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
-import { CreateSessionDTO } from '../types'
-import { generateJwtAndRefreshToken } from '../auth'
+import { CreateSessionDTO } from '../@types/types'
+import { generateJwtAndRefreshToken } from '../utils/generateToken'
 import { checkAuthMiddleware } from '../utils/checkAuthMiddleware'
 import { addUserInformationToRequest } from '../utils/addUserInformationToRequest'
 import {

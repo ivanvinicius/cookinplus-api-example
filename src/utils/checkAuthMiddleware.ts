@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
-import { auth } from '../config'
-import { DecodedToken } from '../types'
+import { auth } from '../config/auth'
+import { DecodedToken } from '../@types/types'
 
 export function checkAuthMiddleware(
   request: Request,

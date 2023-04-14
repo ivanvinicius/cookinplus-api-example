@@ -1,4 +1,4 @@
-import { RefreshTokensStore, UsersStore } from './types'
+import { RefreshTokensStore, UsersStore } from './@types/types'
 import { v4 as uuid } from 'uuid'
 
 export const users: UsersStore = new Map()
