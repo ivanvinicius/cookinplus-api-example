@@ -6,7 +6,7 @@ import { CategoriesRepository } from '../useCases/categories/CategoriesRepositor
 const categoriesRoutes = Router()
 const categoriesRepository = CategoriesRepository.getInstance()
 
-categoriesRoutes.get('/categories', (request, response) => {
+categoriesRoutes.get('/categories', checkAuthMiddleware, (request, response) => {
   const { page = 1, per_page = 10 } = request.query
 
   const totalCount = categoriesRepository.getNumberOfRegisters().toString()
@@ -16,9 +16,28 @@ categoriesRoutes.get('/categories', (request, response) => {
   
   const categories = categoriesRepository.list({pageStart, pageEnd})
 
-  response.setHeader('X-total-Count', totalCount)
+  response.setHeader('x-total-count', totalCount)
 
   return response.status(200).json(categories)
+})
+
+
+categoriesRoutes.get('/categories/:id', checkAuthMiddleware,  (request, response) => {
+  const { id } = request.params
+  
+  const category = categoriesRepository.findById(id)
+
+  console.log(category)
+
+  if(!category) {
+    return response.status(400).json({
+      error: true, 
+      code: 'category.notfound', 
+      message: 'Categoria não foi encontrada.'
+    })
+  }
+
+  return response.status(200).json(category)
 })
 
 categoriesRoutes.post('/categories', checkAuthMiddleware, (request, response) => {

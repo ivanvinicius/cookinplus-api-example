@@ -5,8 +5,8 @@ import { router } from './routes';
 const app = express();
 
 app.use(express.json());
-app.use(cors({ exposedHeaders: ['X-total-Count'] }))
+app.use(cors({ exposedHeaders: ['x-total-count'] }))
+app.use((_request, _response, next) => { setTimeout(next, 1500)});
 app.use(router)
-app.use((_request, _response, next) => { setTimeout(next, 750)});
 
 app.listen(9095);
