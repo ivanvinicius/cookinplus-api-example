@@ -1,5 +1,4 @@
-import { Section } from "./Section"
-
+import { Section } from './Section'
 
 interface IListDTO {
   pageStart: number
@@ -8,24 +7,23 @@ interface IListDTO {
 
 interface ICreateDTO {
   name: string
-  
 }
 
 class SectionsRepository {
   private sections: Section[]
 
   private static INSTANCE: SectionsRepository
-  
+
   private constructor() {
     this.sections = [
-      { id: 'df327cf7-0a41-4c36-be6b-cd8245d5f56a', name: 'Cobertura'},
-      { id: '5fc56cdf-73f3-40c4-86ad-92af5da53f7b', name: 'Massa'},
-      { id: '5ec56cdf-73f3-40c4-86ad-92af5da53f7c', name: 'Recheio'},
+      { id: 'df327cf7-0a41-4c36-be6b-cd8245d5f56a', name: 'Cobertura' },
+      { id: '5fc56cdf-73f3-40c4-86ad-92af5da53f7b', name: 'Massa' },
+      { id: '5ec56cdf-73f3-40c4-86ad-92af5da53f7c', name: 'Recheio' },
     ]
   }
 
   public static getInstance(): SectionsRepository {
-    if(!SectionsRepository.INSTANCE) {
+    if (!SectionsRepository.INSTANCE) {
       SectionsRepository.INSTANCE = new SectionsRepository()
     }
 
@@ -36,7 +34,7 @@ class SectionsRepository {
     return this.sections.length
   }
 
-  list({ pageStart, pageEnd }:IListDTO): Section[] {
+  list({ pageStart, pageEnd }: IListDTO): Section[] {
     return this.sections.slice(pageStart, pageEnd)
   }
 
@@ -48,7 +46,7 @@ class SectionsRepository {
     return this.sections.find((section) => section.name === name)
   }
 
-  create({name}: ICreateDTO): void {
+  create({ name }: ICreateDTO): void {
     const section = new Section()
 
     Object.assign(section, { name })

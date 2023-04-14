@@ -13,8 +13,8 @@ sectionsRoutes.get('/sections', checkAuthMiddleware, (request, response) => {
 
   const pageStart = (Number(page) - 1) * Number(per_page)
   const pageEnd = pageStart + Number(per_page)
-  
-  const sections = sectionsRepository.list({pageStart, pageEnd})
+
+  const sections = sectionsRepository.list({ pageStart, pageEnd })
 
   response.setHeader('x-total-count', totalCount)
 
@@ -26,11 +26,11 @@ sectionsRoutes.post('/sections', checkAuthMiddleware, (request, response) => {
 
   const sectionAlreadyExists = sectionsRepository.findByName(name)
 
-  if(sectionAlreadyExists) {
+  if (sectionAlreadyExists) {
     return response.status(400).json({
-      error: true, 
-      code: 'section.exists', 
-      message: 'Seção já foi cadastrada.'
+      error: true,
+      code: 'section.exists',
+      message: 'Seção já foi cadastrada.',
     })
   }
 
@@ -39,22 +39,26 @@ sectionsRoutes.post('/sections', checkAuthMiddleware, (request, response) => {
   return response.status(201).send()
 })
 
-sectionsRoutes.delete('/sections/:id', checkAuthMiddleware, (request, response) => {
-  const { id } = request.params
+sectionsRoutes.delete(
+  '/sections/:id',
+  checkAuthMiddleware,
+  (request, response) => {
+    const { id } = request.params
 
-  const findSection = sectionsRepository.findById(id)
+    const findSection = sectionsRepository.findById(id)
 
-  if(!findSection) {
-    return response.status(400).json({ 
-      error: true, 
-      code: 'section.notfound', 
-      message: 'Seção não foi encontrada.'
-    })
-  }
+    if (!findSection) {
+      return response.status(400).json({
+        error: true,
+        code: 'section.notfound',
+        message: 'Seção não foi encontrada.',
+      })
+    }
 
-  sectionsRepository.delete(id)
+    sectionsRepository.delete(id)
 
-  return response.status(200).send()
-})
+    return response.status(200).send()
+  },
+)
 
 export { sectionsRoutes }

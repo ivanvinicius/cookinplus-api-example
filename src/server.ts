@@ -1,12 +1,14 @@
-import cors from 'cors';
-import express from 'express';
-import { router } from './routes';
+import cors from 'cors'
+import express from 'express'
+import { router } from './routes'
 
-const app = express();
+const app = express()
 
-app.use(express.json());
+app.use(express.json())
 app.use(cors({ exposedHeaders: ['x-total-count'] }))
-app.use((_request, _response, next) => { setTimeout(next, 1500)});
+app.use((_request, _response, next) => {
+  setTimeout(next, 1000)
+})
 app.use(router)
 
-app.listen(9095);
+app.listen(9095)

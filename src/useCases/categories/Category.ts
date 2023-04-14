@@ -4,7 +4,7 @@ class Category {
   id?: string
   name: string
   parent_id: string | undefined
-  
+
   constructor() {
     if (!this.id) {
       this.id = uuid()

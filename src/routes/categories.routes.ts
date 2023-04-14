@@ -6,93 +6,112 @@ import { CategoriesRepository } from '../useCases/categories/CategoriesRepositor
 const categoriesRoutes = Router()
 const categoriesRepository = CategoriesRepository.getInstance()
 
-categoriesRoutes.get('/categories', checkAuthMiddleware, (request, response) => {
-  const { page = 1, per_page = 10 } = request.query
+categoriesRoutes.get(
+  '/categories',
+  checkAuthMiddleware,
+  (request, response) => {
+    const { page = 1, per_page = 10 } = request.query
 
-  const totalCount = categoriesRepository.getNumberOfRegisters().toString()
+    const totalCount = categoriesRepository.getNumberOfRegisters().toString()
 
-  const pageStart = (Number(page) - 1) * Number(per_page)
-  const pageEnd = pageStart + Number(per_page)
-  
-  const categories = categoriesRepository.list({pageStart, pageEnd})
+    const pageStart = (Number(page) - 1) * Number(per_page)
+    const pageEnd = pageStart + Number(per_page)
 
-  response.setHeader('x-total-count', totalCount)
+    const categories = categoriesRepository.list({ pageStart, pageEnd })
 
-  return response.status(200).json(categories)
-})
+    response.setHeader('x-total-count', totalCount)
 
+    return response.status(200).json(categories)
+  },
+)
 
-categoriesRoutes.get('/categories/:id', checkAuthMiddleware,  (request, response) => {
-  const { id } = request.params
-  
-  const category = categoriesRepository.findById(id)
+categoriesRoutes.get(
+  '/categories/:id',
+  checkAuthMiddleware,
+  (request, response) => {
+    const { id } = request.params
 
-  console.log(category)
+    const category = categoriesRepository.findById(id)
 
-  if(!category) {
-    return response.status(400).json({
-      error: true, 
-      code: 'category.notfound', 
-      message: 'Categoria não foi encontrada.'
-    })
-  }
+    console.log(category)
 
-  return response.status(200).json(category)
-})
+    if (!category) {
+      return response.status(400).json({
+        error: true,
+        code: 'category.notfound',
+        message: 'Categoria não foi encontrada.',
+      })
+    }
 
-categoriesRoutes.post('/categories', checkAuthMiddleware, (request, response) => {
-  const { name, parent_id } = request.body
+    return response.status(200).json(category)
+  },
+)
 
-  const categoryAlreadyExists = categoriesRepository.findByName(name)
+categoriesRoutes.post(
+  '/categories',
+  checkAuthMiddleware,
+  (request, response) => {
+    const { name, parent_id } = request.body
 
-  if(categoryAlreadyExists) {
-    return response.status(400).json({
-      error: true, 
-      code: 'category.exists', 
-      message: 'Categoria já foi cadastrada.'
-    })
-  }
+    const categoryAlreadyExists = categoriesRepository.findByName(name)
 
-  categoriesRepository.create({ name, parent_id })
+    if (categoryAlreadyExists) {
+      return response.status(400).json({
+        error: true,
+        code: 'category.exists',
+        message: 'Categoria já foi cadastrada.',
+      })
+    }
 
-  return response.status(201).send()
-})
+    categoriesRepository.create({ name, parent_id })
 
-categoriesRoutes.put('/categories/:id', checkAuthMiddleware, (request, response) => {
-  const { id } = request.params
-  const {name, parent_id} = request.body
+    return response.status(201).send()
+  },
+)
 
-  const findCategory = categoriesRepository.findById(id)
+categoriesRoutes.put(
+  '/categories/:id',
+  checkAuthMiddleware,
+  (request, response) => {
+    const { id } = request.params
+    const { name, parent_id } = request.body
 
-  if(!findCategory) {
-    return response.status(400).json({
-      error: true, 
-      code: 'category.notfound', 
-      message: 'Categoria não foi encontrada.'
-    })
-  }
+    const findCategory = categoriesRepository.findById(id)
 
-  const updatedCategory = categoriesRepository.update({id, name, parent_id})
+    if (!findCategory) {
+      return response.status(400).json({
+        error: true,
+        code: 'category.notfound',
+        message: 'Categoria não foi encontrada.',
+      })
+    }
 
-  return response.status(200).json(updatedCategory)
-})
+    const updatedCategory = categoriesRepository.update({ id, name, parent_id })
 
-categoriesRoutes.delete('/categories/:id', checkAuthMiddleware, (request, response) => {
-  const { id } = request.params
+    return response.status(200).json(updatedCategory)
+  },
+)
 
-  const findCategory = categoriesRepository.findById(id)
+categoriesRoutes.delete(
+  '/categories/:id',
+  checkAuthMiddleware,
+  (request, response) => {
+    const { id } = request.params
 
-  if(!findCategory) {
-    return response.status(400).json({ 
-      error: true, 
-      code: 'category.notfound', 
-      message: 'Categoria não foi encontrada.'
-    })
-  }
+    const findCategory = categoriesRepository.findById(id)
 
-  categoriesRepository.delete(id)
+    if (!findCategory) {
+      return response.status(400).json({
+        error: true,
+        code: 'category.notfound',
+        message: 'Categoria não foi encontrada.',
+      })
+    }
 
-  return response.status(200).send()
-})
+    categoriesRepository.delete(id)
+
+    return response.status(200).send()
+  },
+)
 
 export { categoriesRoutes }
