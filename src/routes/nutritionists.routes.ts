@@ -9,28 +9,25 @@ const upload = multer(uploadConfig)
 const nutritionistsRoutes = Router()
 const nutritionistsRepository = NutritionistsRepository.getInstance()
 
-nutritionistsRoutes.get(
-  '/nutritionists',
-  checkAuthMiddleware,
-  (request, response) => {
-    const { page = 1, per_page = 10 } = request.query
+nutritionistsRoutes.use(checkAuthMiddleware)
 
-    const totalCount = nutritionistsRepository.getNumberOfRegisters().toString()
+nutritionistsRoutes.get('/nutritionists', (request, response) => {
+  const { page = 1, per_page = 10 } = request.query
 
-    const pageStart = (Number(page) - 1) * Number(per_page)
-    const pageEnd = pageStart + Number(per_page)
+  const totalCount = nutritionistsRepository.getNumberOfRegisters().toString()
 
-    const nutritionists = nutritionistsRepository.list({ pageStart, pageEnd })
+  const pageStart = (Number(page) - 1) * Number(per_page)
+  const pageEnd = pageStart + Number(per_page)
 
-    response.setHeader('x-total-count', totalCount)
+  const nutritionists = nutritionistsRepository.list({ pageStart, pageEnd })
 
-    return response.status(200).json(nutritionists)
-  },
-)
+  response.setHeader('x-total-count', totalCount)
+
+  return response.status(200).json(nutritionists)
+})
 
 nutritionistsRoutes.post(
   '/nutritionists',
-  checkAuthMiddleware,
   upload.single('file'),
   (request, response) => {
     const { user_id } = request.body
@@ -53,26 +50,22 @@ nutritionistsRoutes.post(
   },
 )
 
-nutritionistsRoutes.delete(
-  '/sections/:id',
-  checkAuthMiddleware,
-  (request, response) => {
-    const { id } = request.params
+nutritionistsRoutes.delete('/nutritionists/:id', (request, response) => {
+  const { id } = request.params
 
-    const findNutritionist = nutritionistsRepository.findById(id)
+  const findNutritionist = nutritionistsRepository.findById(id)
 
-    if (!findNutritionist) {
-      return response.status(400).json({
-        error: true,
-        code: 'nutritionist.notfound',
-        message: 'Nutricionista não foi encontrado(a).',
-      })
-    }
+  if (!findNutritionist) {
+    return response.status(400).json({
+      error: true,
+      code: 'nutritionist.notfound',
+      message: 'Nutricionista não foi encontrado(a).',
+    })
+  }
 
-    nutritionistsRepository.delete(id)
+  nutritionistsRepository.delete(id)
 
-    return response.status(200).send()
-  },
-)
+  return response.status(200).send()
+})
 
 export { nutritionistsRoutes }
